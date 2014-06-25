@@ -5,30 +5,30 @@ namespace adLDAP\classes;
 use adLDAP\adLDAP;
 
 /**
- * PHP LDAP CLASS FOR MANIPULATING ACTIVE DIRECTORY 
+ * PHP LDAP CLASS FOR MANIPULATING ACTIVE DIRECTORY
  * Version 5.0.0
- * 
+ *
  * PHP Version 5 with SSL and LDAP support
- * 
+ *
  * Written by Scott Barnett, Richard Hyland
  *   email: scott@wiggumworld.com, adldap@richardhyland.com
  *   http://github.com/adldap/adLDAP
- * 
+ *
  * Copyright (c) 2006-2014 Scott Barnett, Richard Hyland
- * 
+ *
  * We'd appreciate any improvements or additions to be submitted back
  * to benefit the entire community :)
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * @category ToolsAndUtilities
  * @package adLDAP
  * @subpackage Users
@@ -48,7 +48,7 @@ class adLDAPUsers {
 
     /**
      * The current adLDAP connection via dependency injection
-     * 
+     *
      * @var adLDAP
      */
     protected $adldap;
@@ -59,7 +59,7 @@ class adLDAPUsers {
 
     /**
      * Validate a user's login credentials
-     * 
+     *
      * @param string $username A user's AD username
      * @param string $password A user's AD password
      * @param bool optional $prevent_rebind
@@ -71,9 +71,9 @@ class adLDAPUsers {
 
     /**
      * Create a user
-     * 
+     *
      * If you specify a password here, this can only be performed over SSL
-     * 
+     *
      * @param array $attributes The attributes to set to the user account
      * @return bool
      */
@@ -126,8 +126,8 @@ class adLDAPUsers {
 
         // Determine the container
         $attributes["container"] = array_reverse($attributes["container"]);
-         $container = (sizeof($attributes["container"])>0)? ", OU=" . implode(",OU=", $attributes["container"]):"";
-       
+        $container = (sizeof($attributes["container"])>0)? ", CN=" . implode(",CN=", $attributes["container"]):"";
+
        // $container = "OU=" . implode(", OU=", $attributes["container"]);
 
         // Add the entry
@@ -141,7 +141,7 @@ class adLDAPUsers {
     /**
      * Account control options
      *
-     * @param array $options The options to convert to int 
+     * @param array $options The options to convert to int
      * @return int
      */
     protected function accountControl($options) {
@@ -216,7 +216,7 @@ class adLDAPUsers {
 
     /**
      * Delete a user account
-     * 
+     *
      * @param string $username The username to delete (please be careful here!)
      * @param bool $isGUID Is the username a GUID or a samAccountName
      * @return array
@@ -233,7 +233,7 @@ class adLDAPUsers {
 
     /**
      * Groups the user is a member of
-     * 
+     *
      * @param string $username The username to query
      * @param bool $recursive Recursive list of groups
      * @param bool $isGUID Is the username passed a GUID or a samAccountName
@@ -265,7 +265,7 @@ class adLDAPUsers {
 
     /**
      * Find information about the users. Returned in a raw array format from AD
-     * 
+     *
      * @param string $username The username to query
      * @param array $fields Array of parameters to query
      * @param bool $isGUID Is the username passed a GUID or a samAccountName
@@ -320,7 +320,7 @@ class adLDAPUsers {
 
     /**
      * Find information about the users. Returned in a raw array format from AD
-     * 
+     *
      * @param string $username The username to query
      * @param array $fields Array of parameters to query
      * @param bool $isGUID Is the username passed a GUID or a samAccountName
@@ -345,7 +345,7 @@ class adLDAPUsers {
 
     /**
      * Determine if a user is in a specific group
-     * 
+     *
      * @param string $username The username to query
      * @param string $group The name of the group to check against
      * @param bool $recursive Check groups recursively
@@ -377,7 +377,7 @@ class adLDAPUsers {
 
     /**
      * Determine a user's password expiry date
-     * 
+     *
      * @param string $username The username to query
      * @param book $isGUID Is the username passed a GUID or a samAccountName
      * @requires bcmath http://www.php.net/manual/en/book.bc.php
@@ -422,8 +422,8 @@ class adLDAPUsers {
 
         // See MSDN: http://msdn.microsoft.com/en-us/library/ms974598.aspx
         //
-         // pwdLastSet contains the number of 100 nanosecond intervals since January 1, 1601 (UTC), 
-        // stored in a 64 bit integer. 
+         // pwdLastSet contains the number of 100 nanosecond intervals since January 1, 1601 (UTC),
+        // stored in a 64 bit integer.
         //
          // The number of seconds between this date and Unix epoch is 11644473600.
         //
@@ -453,7 +453,7 @@ class adLDAPUsers {
 
     /**
      * Modify a user
-     * 
+     *
      * @param string $username The username to query
      * @param array $attributes The attributes to modify.  Note if you set the enabled attribute you must not specify any other attributes
      * @param bool $isGUID Is the username passed a GUID or a samAccountName
@@ -473,7 +473,7 @@ class adLDAPUsers {
             return false;
         }
 
-        // Translate the update to the LDAP schema                
+        // Translate the update to the LDAP schema
         $mod = $this->adldap->adldap_schema($attributes);
 
         // Check to see if this is an enabled status update
@@ -501,7 +501,7 @@ class adLDAPUsers {
 
     /**
      * Disable a user account
-     * 
+     *
      * @param string $username The username to disable
      * @param bool $isGUID Is the username passed a GUID or a samAccountName
      * @return bool
@@ -521,7 +521,7 @@ class adLDAPUsers {
 
     /**
      * Enable a user account
-     * 
+     *
      * @param string $username The username to enable
      * @param bool $isGUID Is the username passed a GUID or a samAccountName
      * @return bool
@@ -541,7 +541,7 @@ class adLDAPUsers {
 
     /**
      * Set the password of a user - This must be performed over SSL
-     * 
+     *
      * @param string $username The username to modify
      * @param string $password The new password
      * @param bool $isGUID Is the username passed a GUID or a samAccountName
@@ -601,9 +601,9 @@ class adLDAPUsers {
     }
 
     /**
-     * Obtain the user's distinguished name based on their userid 
-     * 
-     * 
+     * Obtain the user's distinguished name based on their userid
+     *
+     *
      * @param string $username The username
      * @param bool $isGUID Is the username passed a GUID or a samAccountName
      * @return string
@@ -619,7 +619,7 @@ class adLDAPUsers {
 
     /**
      * Return a list of all users in AD
-     * 
+     *
      * @param bool $includeDescription Return a description of the user
      * @param string $search Search parameter
      * @param bool $sorted Sort the user accounts
@@ -661,7 +661,7 @@ class adLDAPUsers {
 
     /**
      * Converts a username (samAccountName) to a GUID
-     * 
+     *
      * @param string $username The username to query
      * @return string
      */
@@ -762,7 +762,7 @@ class adLDAPUsers {
 
     /**
      * Get the last logon time of any user as a Unix timestamp
-     * 
+     *
      * @param string $username
      * @return long $unixTimestamp
      */
@@ -777,7 +777,7 @@ class adLDAPUsers {
         $lastLogon = adLDAPUtils::convertWindowsTimeToUnixTime($userInfo[0]['lastLogonTimestamp'][0]);
         return $lastLogon;
     }
-    
+
 private function paginated_search($filter, $fields, $pageSize = 500)
 {
     $cookie = '';
@@ -800,7 +800,7 @@ private function paginated_search($filter, $fields, $pageSize = 500)
 
     return $result;
 }
-    
+
 }
 
 ?>
