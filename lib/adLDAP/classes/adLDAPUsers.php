@@ -126,7 +126,7 @@ class adLDAPUsers {
 
         // Determine the container
         $attributes["container"] = array_reverse($attributes["container"]);
-        $container = (sizeof($attributes["container"])>0)? ", CN=" . implode(",CN=", $attributes["container"]):"";
+         $container = (sizeof($attributes["container"])>0)? ", CN=" . implode(",CN=", $attributes["container"]):"";
 
        // $container = "OU=" . implode(", OU=", $attributes["container"]);
 
