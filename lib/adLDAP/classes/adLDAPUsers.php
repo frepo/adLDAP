@@ -126,10 +126,9 @@ class adLDAPUsers {
 
         // Determine the container
         $attributes["container"] = array_reverse($attributes["container"]);
-         $container = (sizeof($attributes["container"])>0)? ", CN=" . implode(",CN=", $attributes["container"]):"";
+        $container = (sizeof($attributes["container"]) > 0) ? ", CN=" . implode(",CN=", $attributes["container"]) : "";
 
-       // $container = "OU=" . implode(", OU=", $attributes["container"]);
-
+        // $container = "OU=" . implode(", OU=", $attributes["container"]);
         // Add the entry
         $result = @ldap_add($this->adldap->getLdapConnection(), "CN=" . $add["cn"][0] . $container . "," . $this->adldap->getBaseDn(), $add);
         if ($result != true) {
@@ -500,6 +499,43 @@ class adLDAPUsers {
     }
 
     /**
+     * Modify a user
+     *
+     * @param string $username The username to query
+     * @param array $attributes The attributes to modify.  Note if you set the enabled attribute you must not specify any other attributes
+     * @param bool $isGUID Is the username passed a GUID or a samAccountName
+     * @return bool
+     */
+    public function userWorkstations($username, array $workstations, $isGUID = false) {
+        if ($username === NULL) {
+            return "Missing compulsory field [username]";
+        }
+
+        // Find the dn of the user
+        $userDn = $this->dn($username, $isGUID);
+        if ($userDn === false) {
+            return false;
+        }
+
+        if (count($workstations) > 0) {
+            // Translate the update to the LDAP schema
+            $mod = $this->adldap->adldap_schema(array("userworkstations" => implode(',', $workstations)));
+            // Do the update
+            $result = @ldap_modify($this->adldap->getLdapConnection(), $userDn, $mod);
+        } else {
+            // Do the remove
+            $mod = array("userworkstations" => array());
+
+            $result = @ldap_mod_del($this->adldap->getLdapConnection(), $userDn, $mod);
+        }
+
+        if ($result == false) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Disable a user account
      *
      * @param string $username The username to disable
@@ -778,28 +814,26 @@ class adLDAPUsers {
         return $lastLogon;
     }
 
-private function paginated_search($filter, $fields, $pageSize = 500)
-{
-    $cookie = '';
-    $result = [];
-    $result['count'] = 0;
-    do {
+    private function paginated_search($filter, $fields, $pageSize = 500) {
+        $cookie = '';
+        $result = [];
+        $result['count'] = 0;
+        do {
 
-        ldap_set_option($this->adldap->getLdapConnection(), LDAP_OPT_PROTOCOL_VERSION, 3);
-        ldap_control_paged_result($this->adldap->getLdapConnection(), $pageSize, true, $cookie);
+            ldap_set_option($this->adldap->getLdapConnection(), LDAP_OPT_PROTOCOL_VERSION, 3);
+            ldap_control_paged_result($this->adldap->getLdapConnection(), $pageSize, true, $cookie);
 
-        $sr = ldap_search($this->adldap->getLdapConnection(), $this->adldap->getBaseDn(), $filter, $fields);
-        $entries = ldap_get_entries($this->adldap->getLdapConnection(), $sr);
-        $entries['count'] += $result['count'];
+            $sr = ldap_search($this->adldap->getLdapConnection(), $this->adldap->getBaseDn(), $filter, $fields);
+            $entries = ldap_get_entries($this->adldap->getLdapConnection(), $sr);
+            $entries['count'] += $result['count'];
 
-        $result = array_merge($result, $entries);
+            $result = array_merge($result, $entries);
 
-        ldap_control_paged_result_response($this->adldap->getLdapConnection(), $sr, $cookie);
+            ldap_control_paged_result_response($this->adldap->getLdapConnection(), $sr, $cookie);
+        } while ($cookie !== null && $cookie != '');
 
-    } while ($cookie !== null && $cookie != '');
-
-    return $result;
-}
+        return $result;
+    }
 
 }
 
