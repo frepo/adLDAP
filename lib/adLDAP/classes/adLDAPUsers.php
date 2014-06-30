@@ -816,10 +816,9 @@ class adLDAPUsers {
 
     private function paginated_search($filter, $fields, $pageSize = 500) {
         $cookie = '';
-        $result = [];
+        $result = array();
         $result['count'] = 0;
         do {
-
             ldap_set_option($this->adldap->getLdapConnection(), LDAP_OPT_PROTOCOL_VERSION, 3);
             ldap_control_paged_result($this->adldap->getLdapConnection(), $pageSize, true, $cookie);
 
