@@ -702,7 +702,8 @@ class adLDAP {
         
         // Bind as the user        
         $ret = true;
-        $this->ldapBind = @ldap_bind($this->ldapConnection, $username . $this->accountSuffix, $password);
+        $username = (strpos($username, "@")) ? $username : $username . $this->accountSuffix;
+        $this->ldapBind = @ldap_bind($this->ldapConnection, $username, $password);
         if (!$this->ldapBind) { 
             $ret = false; 
         }
